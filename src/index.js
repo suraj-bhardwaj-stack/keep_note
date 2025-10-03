@@ -11,8 +11,8 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <NotesProvider>
-      <App />
-   </NotesProvider>
+        <App />
+      </NotesProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

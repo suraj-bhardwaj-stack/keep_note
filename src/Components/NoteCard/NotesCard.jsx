@@ -1,7 +1,11 @@
 import { useNotes } from "../../Context/Notes-Context"
-
+import { findNotesInArchive } from "../../Utils/findNotesInArchive";
+import { findNotesInBin } from "../../Utils/findNotesInBin";
 export default function NotesCard({title , text , id , isPinned}) {
-    const {notesDispatch} = useNotes()
+    const {notesDispatch,  archive , bin} = useNotes()
+    const isNotesInArchive = findNotesInArchive(archive , id)
+    const isNotesInBin = findNotesInBin(bin , id)
+
     const OnPineedNotes = () => {
          notesDispatch({
             type : "PIN",
@@ -9,8 +13,26 @@ export default function NotesCard({title , text , id , isPinned}) {
         })
     }
 
-    console.log(isPinned , 'is');
-    
+    const ADD_TO_ARCHIVE = () => {
+        !isNotesInArchive ? notesDispatch({
+            type: "ADD_TO_ARCHIVE",
+            payload : {id},
+        }) : notesDispatch({
+            type: "REMOVE_TO_ARCHIVE",
+            payload : {id},
+        })
+    }
+
+    const Delete_Notes = () => {
+          !isNotesInBin ? notesDispatch({
+                type : "DELETE_NOTES",
+                payload : {id}
+            }) : notesDispatch({
+                type: 'DELETE_FROM_BIN',
+                payload : {id}
+            })
+    }
+
     
   return (
     <div className="notex-card-wrapper basis-72 max-w-72 p-4 bg-white rounded break-words">
@@ -34,8 +56,8 @@ export default function NotesCard({title , text , id , isPinned}) {
                                 </button>
                         </div>
                         <div className="archive-and-bin mt-2">
-                                <span class="material-symbols-outlined">archive</span>
-                                <span class="material-symbols-outlined">delete_sweep</span>
+                                <button onClick={ADD_TO_ARCHIVE}><span class={isNotesInArchive ? `material-icons` : `material-symbols-outlined`}>archive</span></button>
+                                <button onClick={Delete_Notes}><span class={isNotesInBin ? `material-icons` :`material-symbols-outlined`}>delete_sweep</span></button>
                         </div>
                         
                     </div>
